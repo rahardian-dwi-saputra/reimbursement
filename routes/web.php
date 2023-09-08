@@ -24,7 +24,10 @@ Route::get('/login', [AuthController::class, 'index'])->middleware('guest:webkar
 
 Route::middleware('auth:webkaryawan')->group(function(){ 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 	Route::resource('reimbursement', ReimbursementController::class);
+	Route::post('/kirimpengajuan/{reimbursement}', [ReimbursementController::class, 'kirim_pengajuan']);
+
 	Route::resource('karyawan', KaryawanController::class);
 	Route::post('/logout', [AuthController::class, 'logout']);
 });

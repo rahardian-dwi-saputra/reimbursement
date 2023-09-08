@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->date('tanggal_pengajuan');
             $table->string('dokumen')->nullable();
-            $table->enum('status', ['draft', 'pengajuan', 'disetujui','selesai'])->default('draft');
+            $table->enum('status', ['Pengajuan', 'Disetujui','Ditolak','Selesai'])->nullable();
+            $table->enum('step', ['Staff', 'Direktur', 'Finance'])->default('Staff');
             $table->string('bukti_pembayaran')->nullable();
             $table->string('diajukan_oleh', 30);
             $table->timestamps();

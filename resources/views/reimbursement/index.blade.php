@@ -4,15 +4,17 @@
 
 <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.css') }}">
 <style>
-	#data-karyawan{
+	#data-reimbursement{
 		font-size: 10pt;
 	}
-	#data-karyawan th, #data-karyawan td:nth-child(1){
+	#data-reimbursement th, #data-reimbursement td{
 		text-align:center;
 	}
-	#data-karyawan td:nth-child(5){
-		text-align:center;
+	#data-reimbursement td:nth-child(5){
 		white-space:nowrap;
+	}
+	#data-reimbursement td:nth-child(2){
+		text-align: left;
 	}
 </style>
 
@@ -24,7 +26,6 @@
             <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan Reimbursement</h6>
         </div>
 		<div class="card-body">
-			<div id="pesan"></div>
 			
 			@if(session()->has('success'))
 				<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -43,20 +44,21 @@
 			<div class="row">
 				<div class="col-md-4">
 					<a href="{{ route('reimbursement.create') }}" class="btn btn-success btn-sm">
-						<i class="fa fa-plus"> Tambah Data</i>
+						<i class="fa fa-plus"> Tambah Pengajuan</i>
 					</a>
 				</div>
 			</div>
 			<br/>
 			
             <div class="table-responsive">
-				<table class="table table-bordered" id="data-karyawan" width="100%" cellspacing="0">
+				<table class="table table-bordered" id="data-reimbursement" width="100%" cellspacing="0">
 					<thead>
 						<tr>
 							<th>No</th>
 							<th>Nama</th>
 							<th>Tanggal</th>
 							<th>Status</th>
+							<th>Step</th>
 							<th>Opsi</th>
 						</tr>
 					</thead>
@@ -66,6 +68,32 @@
 				</table>
 			</div>
 		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modal_send" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-warning text-white">
+				<h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="form-send">
+				<input type="hidden" id="link_send" />
+				<div class="modal-body">
+					@csrf
+					<p style="text-align:center;">
+						Ajukan data ini ke Direktur?
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="btn-hapus">Ya</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+				</div>
+			</form>
+		</div>	
 	</div>
 </div>
 
@@ -101,15 +129,16 @@
 <script>
 	$(document).ready(function(){ 
 
-		var table = $('#data-karyawan').DataTable({
+		var table = $('#data-reimbursement').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('karyawan.index') }}",
+            ajax: "{{ route('reimbursement.index') }}",
             columns: [
                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-               {data: 'nip', name: 'nip'},
                {data: 'nama', name: 'nama'},
-               {data: 'jabatan', name: 'jabatan'},
+               {data: 'tanggal_pengajuan', name: 'tanggal_pengajuan'},
+               {data: 'status', name: 'status'},
+               {data: 'step', name: 'step'},
                {
                   data: 'action', 
                   name: 'action', 
@@ -118,6 +147,47 @@
                },
             ]
       	});
+
+      	//konfirmasi kirim
+		$(document).on('click', 'a#btn-send', function(e){
+			e.preventDefault();
+			$('#link_send').val($(this).attr('href'));
+			$('#modal_send').modal('show');
+		});
+
+		//kirim pengajuan
+		$('#form-send').submit(function(e){
+			e.preventDefault();
+			$.ajax({
+				url: "/kirimpengajuan/"+$('#link_send').val(),
+				type: 'POST',
+                dataType: 'json',
+                data: $(this).serializeArray(),
+                success: function(response){
+                	$('#link_send').val('');
+					$('#modal_send').modal('hide');
+					if(response.success == true){
+                        $('div.alert').addClass('alert-success');
+                        $('div.alert').removeClass('alert-danger');
+                    }else{
+                        $('div.alert').addClass('alert-danger');
+                        $('div.alert').removeClass('alert-success');
+                    }
+
+                    $('div.alert').show();
+                    $('div.alert p').text(response.message);
+                    table.ajax.reload(null, false);
+                    $('div.alert').fadeOut(10000);
+				}
+			});
+		});
+
+
+
+
+
+
+
 		
 		//konfirmasi hapus
 		$(document).on('click', 'a#btn-hapus', function(e){

@@ -66,16 +66,16 @@
 
   				<div class="form-group row">
     				<label for="dokumen" class="col-sm-2 col-form-label">
-    					Dokumen
+    					Dokumen <span style="color:red;">*</span>
     				</label>
     				<div class="col-sm-5">
 
     					<div class="custom-file mb-3">
-    						<input type="file" class="custom-file-input @error('dokumen') is-invalid @enderror" id="dokumen" name="dokumen">
+    						<input type="file" class="form-control-file @error('dokumen') is-invalid @enderror" id="dokumen" name="dokumen">
     						<small class="form-text text-muted">
     							Format .pdf maksimal 2 MB
     						</small>
-    						<label class="custom-file-label">Pilih file...</label>
+    						
     						@error('dokumen')
                         	<div class="invalid-feedback">
                             	{{ $message }}

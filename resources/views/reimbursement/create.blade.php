@@ -54,7 +54,7 @@
     								<i class="fas fa-fw fa-calendar"></i>
     							</span>
   							</div>
-  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan">
+  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ old('tanggal_pengajuan') }}">
   							@error('tanggal_pengajuan')
                         	<div class="invalid-feedback">
                             	{{ $message }}
@@ -73,7 +73,7 @@
     					<div class="custom-file mb-3">
     						<input type="file" class="form-control-file @error('dokumen') is-invalid @enderror" id="dokumen" name="dokumen">
     						<small class="form-text text-muted">
-    							Format .pdf maksimal 2 MB
+    							Format .pdf, .jpg, .jpeg, .png, atau .gif maksimal 2 MB
     						</small>
     						
     						@error('dokumen')
@@ -90,7 +90,7 @@
 						Deskripsi
 					</label>
 					<div class="col-sm-7">
-						<textarea class="form-control" id="deskripsi" name="deskripsi" rows="6" placeholder="Deskripsi"></textarea>
+						<textarea class="form-control" id="deskripsi" name="deskripsi" rows="6" placeholder="Deskripsi">{{ old('deskripsi') }}</textarea>
 						@error('deskripsi')
                         <div class="invalid-feedback">
                             {{ $message }}

@@ -26,15 +26,16 @@
 			</div>
 			<br>
 
-			<form method="post" action="{{ route('reimbursement.store') }}" enctype="multipart/form-data">
+			<form method="post" action="{{ route('reimbursement.update', $reimbursement->id) }}" enctype="multipart/form-data">
 				@csrf
+				@method('PUT')
 					
 				<div class="form-group row">
 					<label for="nama" class="col-sm-2 col-form-label">
 						Nama <span style="color:red;">*</span>
 					</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Nama" value="{{ old('nama') }}">
+						<input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" placeholder="Nama" value="{{ old('nama', $reimbursement->nama) }}">
 						@error('nama')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -54,7 +55,7 @@
     								<i class="fas fa-fw fa-calendar"></i>
     							</span>
   							</div>
-  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan">
+  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ old('tanggal_pengajuan', $reimbursement->tanggal_pengajuan) }}">
   							@error('tanggal_pengajuan')
                         	<div class="invalid-feedback">
                             	{{ $message }}
@@ -71,11 +72,10 @@
     				<div class="col-sm-5">
 
     					<div class="custom-file mb-3">
-    						<input type="file" class="custom-file-input @error('dokumen') is-invalid @enderror" id="dokumen" name="dokumen">
+    						<input type="file" class="form-control-file @error('dokumen') is-invalid @enderror" id="dokumen" name="dokumen">
     						<small class="form-text text-muted">
-    							Format .pdf maksimal 2 MB
+    							Format .pdf, .jpg, .jpeg, .png, atau .gif maksimal 2 MB
     						</small>
-    						<label class="custom-file-label">Pilih file...</label>
     						@error('dokumen')
                         	<div class="invalid-feedback">
                             	{{ $message }}
@@ -90,7 +90,7 @@
 						Deskripsi
 					</label>
 					<div class="col-sm-7">
-						<textarea class="form-control" id="deskripsi" name="deskripsi" rows="6" placeholder="Deskripsi"></textarea>
+						<textarea class="form-control" id="deskripsi" name="deskripsi" rows="6" placeholder="Deskripsi">{{ old('deskripsi', $reimbursement->deskripsi) }}</textarea>
 						@error('deskripsi')
                         <div class="invalid-feedback">
                             {{ $message }}

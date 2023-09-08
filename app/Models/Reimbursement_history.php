@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reimbursement_history extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+    public $timestamps = false;
 }

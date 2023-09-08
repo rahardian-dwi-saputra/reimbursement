@@ -21,6 +21,7 @@
       </a>
    </li>
 	
+   @can('isDirektur')
    <hr class="sidebar-divider">
    <div class="sidebar-heading">
       Direktur
@@ -31,6 +32,7 @@
          <span>Karyawan</span>
       </a>
    </li>
+   @endcan
 
    <hr class="sidebar-divider d-none d-md-block">
    <div class="text-center d-none d-md-inline">

@@ -182,6 +182,13 @@
 			});
 		});
 
+
+
+
+
+
+
+		
 		//konfirmasi hapus
 		$(document).on('click', 'a#btn-hapus', function(e){
 			e.preventDefault();
@@ -193,7 +200,7 @@
 		$('#form-hapus').submit(function(e){
 			e.preventDefault();
 			$.ajax({
-				url: "/reimbursement/"+$('#link_hapus').val(),
+				url: "/karyawan/"+$('#link_hapus').val(),
 				type: 'POST',
                 dataType: 'json',
                 data: $(this).serializeArray(),

@@ -38,24 +38,9 @@
 					<td>{{ $reimbursement->status }}</td>
 				</tr>
 				<tr>
-					<td>Step</td>
-					<td>:</td>
-					<td>{{ $reimbursement->step }}</td>
-				</tr>
-				<tr>
 					<td>Deskripsi</td>
 					<td>:</td>
 					<td>{{ $reimbursement->deskripsi }}</td>
-				</tr>
-				<tr>
-					<td>Bukti Pembayaran</td>
-					<td>:</td>
-					<td>{{ $reimbursement->bukti_pembayaran }}</td>
-				</tr>
-				<tr>
-					<td>Pemohon</td>
-					<td>:</td>
-					<td>{{ $reimbursement->karyawan->nama.' [ NIP: '.$reimbursement->karyawan->nip.' ]' }}</td>
 				</tr>
 			</table>
 			

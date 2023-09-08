@@ -28,7 +28,10 @@ Route::middleware('auth:webkaryawan')->group(function(){
 	Route::resource('reimbursement', ReimbursementController::class);
 	Route::post('/kirimpengajuan/{reimbursement}', [ReimbursementController::class, 'kirim_pengajuan']);
 
-	Route::resource('karyawan', KaryawanController::class);
+	Route::middleware('can:isDirektur')->group(function(){
+		Route::resource('karyawan', KaryawanController::class);
+	});
+	
 	Route::post('/logout', [AuthController::class, 'logout']);
 });
 

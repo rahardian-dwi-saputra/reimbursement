@@ -43,7 +43,29 @@
 				<tr>
 					<td>Status</td>
 					<td>:</td>
-					<td>{{ $reimbursement->status }}</td>
+					<td>
+						<h6>
+							@if($reimbursement->status == '')
+								<span class="badge badge-secondary">
+							@elseif($reimbursement->status == 'Pengajuan')
+								<span class="badge badge-warning">
+							@elseif($reimbursement->status == 'Disetujui')
+								<span class="badge badge-success">
+							@elseif($reimbursement->status == 'Ditolak')
+								<span class="badge badge-danger">
+							@elseif($reimbursement->status == 'Selesai')
+								<span class="badge badge-primary">
+							@endif
+
+							@if($reimbursement->status == '')
+								Draft
+							@else
+								{{ $reimbursement->status }}
+							@endif
+
+							</span>
+						</h6>
+					</td>
 				</tr>
 				<tr>
 					<td>Step</td>
@@ -65,11 +87,15 @@
 					<td>:</td>
 					<td>{{ $reimbursement->deskripsi }}</td>
 				</tr>
+
+				@if($reimbursement->bukti_pembayaran != '')
 				<tr>
 					<td>Bukti Pembayaran</td>
 					<td>:</td>
 					<td>{{ $reimbursement->bukti_pembayaran }}</td>
 				</tr>
+				@endif
+
 				<tr>
 					<td>Pemohon</td>
 					<td>:</td>
@@ -77,24 +103,21 @@
 				</tr>
 			</table>
 			
-
-
-
-
-
-
-
+			@if(count($history) == 0)
 			<a href="{{ route('reimbursement.index') }}" class="btn btn-primary">
 				<i class="fa fa-arrow-left"></i> Kembali
 			</a>
+			@endif
 		</div>
+
+		@if(count($history) > 0)
 		<div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">History Pengajuan Reimbursement</h6>
         </div>
         <div class="card-body">
 
         	<ul class="timeline">
-        		@foreach($history as $step):
+        		@foreach($history as $step)
         		<li>
         			<div class="timeline-badge {{ $step->warna }}">
                         <i class="{{ $step->icon }}"></i>
@@ -117,39 +140,18 @@
                     		Catatan: {{ $step->keterangan }}
                     		@endif
 
-                    		
+
                     	</div>
                     </div>
         		</li>
         		@endforeach
         	</ul>
-
-
-        	<ul class="timeline">
-        		<li>
-        			<div class="timeline-badge warning">
-                        <i class="fa fa-exclamation-circle"></i>
-                    </div>
-                    <div class="timeline-panel">
-                        <div class="timeline-heading">
-                            <h4 class="timeline-title">
-                                Tes Timeline
-                            </h4>
-                            <p>
-                                <small class="text-muted">
-                                <i class="fa fa-clock"></i> 
-                                             12-02-2023
-                                </small>
-                            </p>
-                        </div>
-                        <div class="timeline-body">
-                        <p>Tes Aktivitas</p>
-                                       Catatatan:
-                                    </div>
-                                 </div>
-        		</li>
-        	</ul>
+        	<br>
+        	<a href="{{ route('reimbursement.index') }}" class="btn btn-primary">
+				<i class="fa fa-arrow-left"></i> Kembali
+			</a>
         </div>
+        @endif
 
 	</div>
 </div>

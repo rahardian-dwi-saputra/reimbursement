@@ -9,6 +9,7 @@ use App\Models\Reimbursement_history;
 use DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class ReimbursementController extends Controller
 {
@@ -23,7 +24,8 @@ class ReimbursementController extends Controller
                             'tanggal_pengajuan',
                             'status',
                             'step'
-                        )->where('diajukan_oleh', Auth::guard('webkaryawan')->user()->nip);
+                        )->where('diajukan_oleh', Auth::guard('webkaryawan')->user()->nip)
+                        ->orderBy('tanggal_pengajuan', 'desc');
 
             return Datatables::of($reimbursement)
                     ->addIndexColumn()
@@ -89,6 +91,8 @@ class ReimbursementController extends Controller
      * Display the specified resource.
      */
     public function show(Reimbursement $reimbursement){
+        Gate::authorize('access-reimbursement', $reimbursement);
+        
         $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
         $history = Reimbursement_history::where(
             'reimbursement_id', $reimbursement->id
@@ -104,6 +108,12 @@ class ReimbursementController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Reimbursement $reimbursement){
+        Gate::authorize('access-reimbursement', $reimbursement);
+
+        if (!Gate::allows('unlock-data', $reimbursement)) {
+            abort(403);
+        }
+
         $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
         return view('reimbursement.edit', [
             'title' => 'Edit Data Pengajuan Reimbursement',
@@ -116,6 +126,12 @@ class ReimbursementController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Reimbursement $reimbursement){
+        Gate::authorize('access-reimbursement', $reimbursement);
+
+        if (!Gate::allows('unlock-data', $reimbursement)) {
+            abort(403);
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_pengajuan' => 'required|date_format:d-m-Y',
@@ -162,6 +178,20 @@ class ReimbursementController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Reimbursement $reimbursement){
+        if (!Gate::allows('access-reimbursement', $reimbursement)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak diperkenankan menghapus data ini',
+            ]);
+        }
+
+        if($reimbursement->status != ''){
+            return response()->json([
+                'success' => false,
+                'message' => 'Data yang sudah diajukan tidak dapat dihapus',
+            ]);
+        }
+
         if($reimbursement->dokumen){
             Storage::delete($reimbursement->dokumen);
         }

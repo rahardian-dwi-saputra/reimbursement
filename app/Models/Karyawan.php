@@ -25,4 +25,8 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(Reimbursement::class);
     }
+    public function reimbursement_history(): HasMany
+    {
+        return $this->hasMany(Reimbursement_history::class);
+    }
 }

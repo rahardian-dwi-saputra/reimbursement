@@ -65,9 +65,26 @@
 					</div>
 				</div>
 
+				<div class="form-group row">
+					<label for="nama" class="col-sm-2 col-form-label">
+						Dokumen Tersimpan
+					</label>
+					<div class="col-sm-7">
+						@if($ektensi == 'pdf')
+						<a href="/display_pdf/{{ $reimbursement->id }}" target="_blank">
+								{{ str_replace('dokumen-pengajuan/','',$reimbursement->dokumen) }}
+							</a>
+						@elseif(in_array($ektensi, array('jpg','jpeg','png','gif')))
+						<img src="{{ asset('storage/'.$reimbursement->dokumen) }}" width="300" height="500" />
+						@else	
+							{{ str_replace('dokumen-pengajuan/','',$reimbursement->dokumen) }}
+						@endif
+					</div>
+				</div>
+
   				<div class="form-group row">
     				<label for="dokumen" class="col-sm-2 col-form-label">
-    					Dokumen
+    					Edit Dokumen
     				</label>
     				<div class="col-sm-5">
 
@@ -84,6 +101,13 @@
   						</div>
 					</div>
   				</div>
+
+  				<div class="form-group row d-none" id="field-image">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-5">
+                        <img id="imagepreview" class="img-fluid" style="max-height: 200px; overflow-y: auto;" />
+                    </div>
+                </div>
 
 				<div class="form-group row">
 					<label for="deskripsi" class="col-sm-2 col-form-label">
@@ -117,10 +141,33 @@
 </div>
 <script src="{{ asset('assets/plugin/jquery-ui/jquery-ui.js') }}"></script>
 <script>
+	function readURL(input){
+        $('#field-image').removeClass('d-none');
+        
+        var url = input.value;
+        var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+        if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+            var reader = new FileReader();
+
+            reader.onload = function (e){
+                $('#field-image div div').html('');
+                $('#imagepreview').removeClass('d-none');
+                $('#imagepreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            $('#imagepreview').addClass('d-none');
+        }
+    }   
 	$(document).ready(function(){
 		$("#tanggal_pengajuan").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
+
+		$("#dokumen").change(function(){
+            readURL(this);
+        });
 	});
 </script>
 @endsection

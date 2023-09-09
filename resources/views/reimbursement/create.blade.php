@@ -54,7 +54,7 @@
     								<i class="fas fa-fw fa-calendar"></i>
     							</span>
   							</div>
-  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ old('tanggal_pengajuan') }}">
+  							<input type="text" class="form-control @error('tanggal_pengajuan') is-invalid @enderror" name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ old('tanggal_pengajuan') }}" autocomplete="off">
   							@error('tanggal_pengajuan')
                         	<div class="invalid-feedback">
                             	{{ $message }}
@@ -84,6 +84,13 @@
   						</div>
 					</div>
   				</div>
+
+  				<div class="form-group row d-none" id="field-image">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-5">
+                        <img id="imagepreview" class="img-fluid" style="max-height: 200px; overflow-y: auto;" />
+                    </div>
+                </div>
 
 				<div class="form-group row">
 					<label for="deskripsi" class="col-sm-2 col-form-label">
@@ -117,10 +124,33 @@
 </div>
 <script src="{{ asset('assets/plugin/jquery-ui/jquery-ui.js') }}"></script>
 <script>
+	function readURL(input){
+        $('#field-image').removeClass('d-none');
+        
+        var url = input.value;
+        var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+        if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+            var reader = new FileReader();
+
+            reader.onload = function (e){
+                $('#field-image div div').html('');
+                $('#imagepreview').removeClass('d-none');
+                $('#imagepreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            $('#imagepreview').addClass('d-none');
+        }
+    }   
 	$(document).ready(function(){
 		$("#tanggal_pengajuan").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
+
+		$("#dokumen").change(function(){
+            readURL(this);
+        });
 	});
 </script>
 @endsection

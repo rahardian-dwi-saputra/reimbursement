@@ -89,16 +89,26 @@ class ReimbursementController extends Controller
      * Display the specified resource.
      */
     public function show(Reimbursement $reimbursement){
-        return view('reimbursement.show', ['reimbursement' => $reimbursement]);
+        $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
+        $history = Reimbursement_history::where(
+            'reimbursement_id', $reimbursement->id
+        )->orderBy('waktu', 'desc')->get();
+        return view('reimbursement.show', [
+            'reimbursement' => $reimbursement,
+            'ektensi' => $ext,
+            'history' => $history
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Reimbursement $reimbursement){
+        $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
         return view('reimbursement.edit', [
             'title' => 'Edit Data Pengajuan Reimbursement',
-            'reimbursement' => $reimbursement
+            'reimbursement' => $reimbursement,
+            'ektensi' => $ext
         ]);
     }
 
@@ -180,9 +190,12 @@ class ReimbursementController extends Controller
 
         if ($reimbursement){
             Reimbursement_history::create([
+                'reimbursement_id' => $reimbursement->id,
                 'karyawan' => Auth::guard('webkaryawan')->user()->nip,
                 'waktu' => date('Y-m-d H:i:s'),
-                'aktivitas' => 'Reimbursement telah diajukan'
+                'aktivitas' => 'Reimbursement telah diajukan',
+                'warna' => 'warning',
+                'icon' => 'fa fa-paper-plane',
             ]);
 
             return response()->json([

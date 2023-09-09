@@ -1,5 +1,5 @@
 @extends('template/main')
-@section('title','Validasi Reimbursement')
+@section('title','Pembayaran Reimbursement')
 @section('container')
 
 <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.css') }}">
@@ -19,7 +19,7 @@
 </style>
 
 <div class="container-fluid">
-	<h1 class="h3 mb-2 text-gray-800">Validasi Reimbursement</h1>
+	<h1 class="h3 mb-2 text-gray-800">Pembayaran Reimbursement</h1>
 	
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
@@ -123,7 +123,7 @@
 		var table = $('#data-reimbursement').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "/daftar/reimbursement",
+            ajax: "{{ route('reimbursement.index') }}",
             columns: [
                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                {data: 'nama', name: 'nama'},

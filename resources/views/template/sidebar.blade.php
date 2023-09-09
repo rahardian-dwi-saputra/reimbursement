@@ -20,6 +20,22 @@
          <span>Reimbursement</span>
       </a>
    </li>
+
+   @can('isDirektur')
+   <li class="nav-item">
+      <a class="nav-link" href="/daftar/reimbursement">
+        <i class="fas fa-fw fa-gavel"></i>
+         <span>Validasi Reimbursement</span>
+      </a>
+   </li>
+   @endcan
+
+   <li class="nav-item">
+      <a class="nav-link" href="/list/reimbursement">
+        <i class="fas fa-fw fa-wallet"></i>
+         <span>Pembayaran</span>
+      </a>
+   </li>
 	
    @can('isDirektur')
    <hr class="sidebar-divider">

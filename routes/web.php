@@ -3,8 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ReimbursementController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PersetujuanController;
+use App\Http\Controllers\PembayaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,13 +28,20 @@ Route::get('/login', [AuthController::class, 'index'])->middleware('guest:webkar
 
 Route::middleware('auth:webkaryawan')->group(function(){ 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+	Route::get('/profilsaya', [ProfilController::class, 'index']);
 
 	Route::resource('reimbursement', ReimbursementController::class);
+	Route::get('/display_pdf/{reimbursement}', [PdfController::class, 'display_dokumen']);
 	Route::post('/kirimpengajuan/{reimbursement}', [ReimbursementController::class, 'kirim_pengajuan']);
 
 	Route::middleware('can:isDirektur')->group(function(){
 		Route::resource('karyawan', KaryawanController::class);
+		Route::get('/daftar/reimbursement', [PersetujuanController::class, 'index']);
+		Route::get('/validasi/reimbursement/{reimbursement}', [PersetujuanController::class, 'validasi']);
+		Route::post('/validasi/reimbursement/{reimbursement}', [PersetujuanController::class, 'kirim_validasi']);
 	});
+
+	Route::get('/list/reimbursement', [PembayaranController::class, 'index']);
 	
 	Route::post('/logout', [AuthController::class, 'logout']);
 });

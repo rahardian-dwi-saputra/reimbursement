@@ -21,9 +21,12 @@ use App\Http\Controllers\PembayaranController;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+*/
+Route::get('/', [AuthController::class, 'index'])->middleware('guest:webkaryawan');
 Route::get('/login', [AuthController::class, 'index'])->middleware('guest:webkaryawan')->name('login');
 
 Route::middleware('auth:webkaryawan')->group(function(){ 

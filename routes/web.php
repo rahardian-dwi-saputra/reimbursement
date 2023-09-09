@@ -39,9 +39,19 @@ Route::middleware('auth:webkaryawan')->group(function(){
 		Route::get('/daftar/reimbursement', [PersetujuanController::class, 'index']);
 		Route::get('/validasi/reimbursement/{reimbursement}', [PersetujuanController::class, 'validasi']);
 		Route::post('/validasi/reimbursement/{reimbursement}', [PersetujuanController::class, 'kirim_validasi']);
+		Route::get('/detail/reimbursement/{reimbursement}', [PersetujuanController::class, 'show']);
 	});
 
-	Route::get('/list/reimbursement', [PembayaranController::class, 'index']);
+	Route::middleware('can:isFinance')->group(function(){
+
+		Route::get('/finance/reimbursement', [PembayaranController::class, 'index']);
+		Route::get('/finance/reimbursement/{reimbursement}', [PembayaranController::class, 'show']);
+		Route::get('/finance/validasi/{reimbursement}', [PembayaranController::class, 'validasi']);
+		Route::post('/finance/validasi/{reimbursement}', [PembayaranController::class, 'kirim_validasi']);
+		Route::get('/finance/buktipembayaran/{reimbursement}', [PembayaranController::class, 'input_bukti_pembayaran']);
+		Route::post('/finance/buktipembayaran/{reimbursement}', [PembayaranController::class, 'upload_bukti_pembayaran']);
+
+	});
 	
 	Route::post('/logout', [AuthController::class, 'logout']);
 });

@@ -1,5 +1,5 @@
 @extends('template/main')
-@section('title','Karyawan')
+@section('title','Validasi Reimbursement')
 @section('container')
 
 <style>
@@ -45,7 +45,44 @@
 				<tr>
 					<td>Status</td>
 					<td>:</td>
-					<td>{{ $reimbursement->status }}</td>
+					<td>
+						<h6>
+							@if($reimbursement->status == '')
+								<span class="badge badge-secondary">
+							@elseif($reimbursement->status == 'Pengajuan')
+								<span class="badge badge-warning">
+							@elseif($reimbursement->status == 'Disetujui')
+								<span class="badge badge-success">
+							@elseif($reimbursement->status == 'Ditolak')
+								<span class="badge badge-danger">
+							@elseif($reimbursement->status == 'Selesai')
+								<span class="badge badge-primary">
+							@endif
+
+							@if($reimbursement->status == '')
+								Draft
+							@else
+								{{ $reimbursement->status }}
+							@endif
+
+							</span>
+						</h6>
+					</td>
+				</tr>
+				<tr>
+					<td>Step</td>
+					<td>:</td>
+					<td>
+						<h6>
+							@if($reimbursement->step == 'Staff')
+								<span class="badge badge-secondary">
+							@else
+								<span class="badge badge-info">
+							@endif
+								{{ $reimbursement->step }}
+							</span>
+						</h6>
+					</td>
 				</tr>
 				<tr>
 					<td>Deskripsi</td>
@@ -93,7 +130,11 @@
   								Tolak
   							</label>
 						</div>
-						<div class="invalid-feedback">More example invalid feedback text</div>
+						@error('validasi')
+						<small class="form-text text-danger">
+							{{ $message }}
+						</small>
+						@enderror
 					</div>
 				</div>
         		<div class="form-group row">

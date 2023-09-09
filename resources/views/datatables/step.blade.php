@@ -1,9 +1,8 @@
+<h6>
 @if($step == 'Staff')
-	<h6>
-		<span class="badge badge-secondary">{{ $step }}</span>
-	</h6>
+	<span class="badge badge-secondary">
 @else
-	<h6>
-		<span class="badge badge-info">{{ $step }}</span>
-	</h6>
+	<span class="badge badge-info">
 @endif
+	{{ $step }}</span>
+</h6>

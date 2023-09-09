@@ -30,12 +30,14 @@
    </li>
    @endcan
 
+   @can('isFinance')
    <li class="nav-item">
-      <a class="nav-link" href="/list/reimbursement">
+      <a class="nav-link" href="/finance/reimbursement">
         <i class="fas fa-fw fa-wallet"></i>
          <span>Pembayaran</span>
       </a>
    </li>
+   @endcan
 	
    @can('isDirektur')
    <hr class="sidebar-divider">

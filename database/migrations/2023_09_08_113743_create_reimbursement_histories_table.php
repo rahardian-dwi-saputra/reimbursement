@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('reimbursement_histories', function (Blueprint $table) {
             $table->foreignId('reimbursement_id');
-            $table->string('karyawan', 30);
+            $table->text('judul');
+            $table->string('karyawan_id', 30);
             $table->dateTime('waktu', $precision = 0);
             $table->enum('jenis_aktifitas', ['Info', 'Persetujuan'])->default('Info');
             $table->text('aktivitas');
-            $table->enum('status', ['Tolak', 'Setuju'])->nullable();
             $table->text('keterangan')->nullable();
             $table->enum('warna', ['primary', 'success', 'warning', 'danger', 'info'])->default('info');
             $table->string('icon', 30)->nullable();
             $table->foreign('reimbursement_id')->references('id')->on('reimbursements');
-            $table->foreign('karyawan')->references('nip')->on('karyawan');
+            $table->foreign('karyawan_id')->references('nip')->on('karyawan');
         });
     }
 

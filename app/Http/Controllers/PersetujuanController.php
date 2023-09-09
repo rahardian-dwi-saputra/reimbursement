@@ -19,7 +19,7 @@ class PersetujuanController extends Controller
                             'tanggal_pengajuan',
                             'status',
                             'step'
-                        );
+                        )->whereNotNull('status');
 
     		return Datatables::of($reimbursement)
                     ->addIndexColumn()
@@ -31,6 +31,17 @@ class PersetujuanController extends Controller
     	}
 
     	return view('persetujuan.index');
+    }
+    public function show(Reimbursement $reimbursement){
+        $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
+        $history = Reimbursement_history::where(
+            'reimbursement_id', $reimbursement->id
+        )->orderBy('waktu', 'desc')->get();
+        return view('persetujuan.show', [
+            'reimbursement' => $reimbursement,
+            'ektensi' => $ext,
+            'history' => $history
+        ]);
     }
     public function validasi(Reimbursement $reimbursement){
         $ext  = pathinfo($reimbursement->dokumen, PATHINFO_EXTENSION);
@@ -47,18 +58,17 @@ class PersetujuanController extends Controller
 
         $data_history = array();
         $data_history['reimbursement_id'] = $reimbursement->id;
-        $data_history['karyawan'] = Auth::guard('webkaryawan')->user()->nip;
+        $data_history['karyawan_id'] = Auth::guard('webkaryawan')->user()->nip;
         $data_history['waktu'] = date('Y-m-d H:i:s');
         $data_history['jenis_aktifitas'] = 'Persetujuan';
+        $data_history['judul'] = 'Persetujuan Direktur';
         if($request->validasi == 1){
-            $data_history['aktivitas'] = 'Pengajuan Reimbursement telah disetujui oleh Direktur dan diteruskan ke bagian Finance';
-            $data_history['status'] = 'Setuju';
+            $data_history['aktivitas'] = 'Pengajuan Reimbursement telah disetujui dan diteruskan ke Finance';
             $data_history['warna'] = 'success';
             $data_history['icon'] = 'fa fa-check';
         }
         else{
-            $data_history['aktivitas'] = 'Pengajuan Reimbursement ditolak oleh Direktur';
-            $data_history['status'] = 'Tolak';
+            $data_history['aktivitas'] = 'Pengajuan Reimbursement ditolak';
             $data_history['warna'] = 'danger';
             $data_history['icon'] = 'fa fa-exclamation-circle';
         }
@@ -84,9 +94,9 @@ class PersetujuanController extends Controller
 
         if ($reimbursement){
             return redirect()
-                ->route('/daftar/reimbursement')
+                ->to('/daftar/reimbursement')
                 ->with([
-                    'success' => 'Validasi Reimbursement berhasil'
+                    'success' => 'Validasi Reimbursement berhasil disimpan'
                 ]);
         } else {
             return redirect()

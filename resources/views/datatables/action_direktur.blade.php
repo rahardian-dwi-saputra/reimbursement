@@ -1,4 +1,4 @@
-<a href="/reimbursement/{{ $id }}" class="btn btn-sm btn-primary" title="detail">
+<a href="/detail/reimbursement/{{ $id }}" class="btn btn-sm btn-primary" title="detail">
 	<i class="fa fa-search"></i>
 </a>
 @if($status == 'Pengajuan')

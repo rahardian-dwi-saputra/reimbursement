@@ -1,12 +1,15 @@
 @extends('template/main')
-@section('title','Validasi Reimbursement')
+@section('title','Pembayaran Reimbursement')
 @section('container')
 
-<link rel="stylesheet" href="{{ asset('assets/css/timeline.css') }}">
-
+<style>
+	table.borderless td{
+		border: none !important;
+	}
+</style>
 
 <div class="container-fluid">
-	<h1 class="h3 mb-2 text-gray-800">Reimbursement</h1>
+	<h1 class="h3 mb-2 text-gray-800">Pembayaran Reimbursement</h1>
 	
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
@@ -37,7 +40,6 @@
 						@else	
 							{{ str_replace('dokumen-pengajuan/','',$reimbursement->dokumen) }}
 						@endif
-
 					</td>
 				</tr>
 				<tr>
@@ -87,17 +89,6 @@
 					<td>:</td>
 					<td>{{ $reimbursement->deskripsi }}</td>
 				</tr>
-
-				@if($reimbursement->bukti_pembayaran != '')
-				<tr>
-					<td>Bukti Pembayaran</td>
-					<td>:</td>
-					<td>
-						<img src="{{ asset('storage/'.$reimbursement->bukti_pembayaran) }}" width="200" height="250" />
-					</td>
-				</tr>
-				@endif
-
 				<tr>
 					<td>Pemohon</td>
 					<td>:</td>
@@ -105,56 +96,73 @@
 				</tr>
 			</table>
 			
-			@if(count($history) == 0)
-			<a href="{{ route('reimbursement.index') }}" class="btn btn-primary">
-				<i class="fa fa-arrow-left"></i> Kembali
-			</a>
-			@endif
 		</div>
-
-		@if(count($history) > 0)
 		<div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">History Pengajuan Reimbursement</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Validasi Pengajuan Reimbursement</h6>
         </div>
         <div class="card-body">
 
-        	<ul class="timeline">
-        		@foreach($history as $step)
-        		<li>
-        			<div class="timeline-badge {{ $step->warna }}">
-                        <i class="{{ $step->icon }}"></i>
-                    </div>
-                    <div class="timeline-panel">
-                    	<div class="timeline-heading">
-                    		<h4 class="timeline-title">
-                                {{ $step->judul }}
-                            </h4>
-                            <p>
-                                <small class="text-muted">
-                                <i class="fa fa-clock"></i> 
-                                    {{ $step->waktu }}
-                                </small>
-                            </p>
-                    	</div>
-                    	<div class="timeline-body">
-                    		<p>{{ $step->aktivitas }}</p>
-                    		@if($step->jenis_aktifitas == 'Persetujuan' && $step->keterangan != '')
-                    		<p>Catatan: {{ $step->keterangan }}</p>
-                    		@endif
+        	@if(session()->has('error'))
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				{{ session('error') }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    				<span aria-hidden="true">&times;</span>
+  				</button>
+  			</div>
+  			@endif
 
-                    		<p>Oleh: {{ $step->karyawan->nama.' [ NIP: '.$step->karyawan->nip.' ]' }}</p>
-                    	</div>
-                    </div>
-        		</li>
-        		@endforeach
-        	</ul>
-        	<br>
-        	<a href="/daftar/reimbursement" class="btn btn-primary">
-				<i class="fa fa-arrow-left"></i> Kembali
-			</a>
+        	<form method="post" action="/finance/validasi/{{ $reimbursement->id }}">
+        		@csrf
+        		<div class="form-group row">
+					<label for="validasi" class="col-sm-2 col-form-label">
+						Status <span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-7">
+						<div class="form-check form-check-inline">
+  							<input class="form-check-input" type="radio" name="validasi" id="validasi" value="1">
+  							<label class="form-check-label" for="inlineRadio1">
+  								Setujui
+  							</label>
+						</div>
+						<div class="form-check form-check-inline">
+  							<input class="form-check-input" type="radio" name="validasi" id="validasi" value="0">
+  							<label class="form-check-label" for="inlineRadio2">
+  								Tolak
+  							</label>
+						</div>
+						@error('validasi')
+						<small class="form-text text-danger">
+							{{ $message }}
+						</small>
+						@enderror
+					</div>
+				</div>
+        		<div class="form-group row">
+					<label for="catatan" class="col-sm-2 col-form-label">
+						Catatan
+					</label>
+					<div class="col-sm-7">
+						<textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="6" placeholder="Catatan">{{ old('catatan') }}</textarea>
+						@error('catatan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-5">
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-save"></i> Simpan
+						</button>
+						<a href="/finance/reimbursement" class="btn btn-secondary">
+							<i class="fa fa-arrow-left"></i> Kembali
+						</a>
+					</div>
+				</div>
+        	</form>
         </div>
-        @endif
-
 	</div>
 </div>
 @endsection

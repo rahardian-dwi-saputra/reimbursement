@@ -185,7 +185,7 @@ class ReimbursementController extends Controller
             ]);
         }
 
-        if($reimbursement->status != ''){
+        if (!Gate::allows('unlock-data', $reimbursement)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data yang sudah diajukan tidak dapat dihapus',
@@ -196,6 +196,7 @@ class ReimbursementController extends Controller
             Storage::delete($reimbursement->dokumen);
         }
 
+        Reimbursement_history::where('reimbursement_id', $reimbursement->id)->delete();
         $delete = Reimbursement::destroy($reimbursement->id);
 
         if($delete){
@@ -221,9 +222,10 @@ class ReimbursementController extends Controller
         if ($reimbursement){
             Reimbursement_history::create([
                 'reimbursement_id' => $reimbursement->id,
-                'karyawan' => Auth::guard('webkaryawan')->user()->nip,
+                'judul' => 'Pengajuan Reimbursement',
+                'karyawan_id' => Auth::guard('webkaryawan')->user()->nip,
                 'waktu' => date('Y-m-d H:i:s'),
-                'aktivitas' => 'Reimbursement telah diajukan',
+                'aktivitas' => 'Reimbursement telah diajukan ke Direktur',
                 'warna' => 'warning',
                 'icon' => 'fa fa-paper-plane',
             ]);

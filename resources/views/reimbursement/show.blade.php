@@ -92,7 +92,9 @@
 				<tr>
 					<td>Bukti Pembayaran</td>
 					<td>:</td>
-					<td>{{ $reimbursement->bukti_pembayaran }}</td>
+					<td>
+						<img src="{{ asset('storage/'.$reimbursement->bukti_pembayaran) }}" width="200" height="250" />
+					</td>
 				</tr>
 				@endif
 
@@ -125,7 +127,7 @@
                     <div class="timeline-panel">
                     	<div class="timeline-heading">
                     		<h4 class="timeline-title">
-                                {{ $step->jenis_aktifitas }}
+                                {{ $step->judul }}
                             </h4>
                             <p>
                                 <small class="text-muted">
@@ -137,10 +139,10 @@
                     	<div class="timeline-body">
                     		<p>{{ $step->aktivitas }}</p>
                     		@if($step->jenis_aktifitas == 'Persetujuan' && $step->keterangan != '')
-                    		Catatan: {{ $step->keterangan }}
+                    		<p>Catatan: {{ $step->keterangan }}</p>
                     		@endif
 
-
+                    		<p>Oleh: {{ $step->karyawan->nama.' [ NIP: '.$step->karyawan->nip.' ]' }}</p>
                     	</div>
                     </div>
         		</li>

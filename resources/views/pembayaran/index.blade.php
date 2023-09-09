@@ -62,59 +62,6 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modal_send" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header bg-warning text-white">
-				<h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form id="form-send">
-				<input type="hidden" id="link_send" />
-				<div class="modal-body">
-					@csrf
-					<p style="text-align:center;">
-						Ajukan data ini ke Direktur?
-					</p>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" id="btn-hapus">Ya</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-				</div>
-			</form>
-		</div>	
-	</div>
-</div>
-
-<div class="modal fade" id="modal_confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header bg-danger text-white">
-				<h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form id="form-hapus">
-				<input type="hidden" id="link_hapus" />
-				<div class="modal-body">
-					@csrf
-                    @method('DELETE')
-					<p style="text-align:center;">
-						Apakah anda yakin ingin menghapus data ini? <br/>Tekan tombol OK untuk melanjutkan
-					</p>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" id="btn-hapus">OK</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-				</div>
-			</form>
-		</div>	
-	</div>
-</div>
-
 <script src="{{ asset('assets/vendor/datatables/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script>
@@ -123,7 +70,7 @@
 		var table = $('#data-reimbursement').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('reimbursement.index') }}",
+            ajax: "/finance/reimbursement",
             columns: [
                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                {data: 'nama', name: 'nama'},
@@ -139,81 +86,6 @@
             ]
       	});
 
-      	//konfirmasi kirim
-		$(document).on('click', 'a#btn-send', function(e){
-			e.preventDefault();
-			$('#link_send').val($(this).attr('href'));
-			$('#modal_send').modal('show');
-		});
-
-		//kirim pengajuan
-		$('#form-send').submit(function(e){
-			e.preventDefault();
-			$.ajax({
-				url: "/kirimpengajuan/"+$('#link_send').val(),
-				type: 'POST',
-                dataType: 'json',
-                data: $(this).serializeArray(),
-                success: function(response){
-                	$('#link_send').val('');
-					$('#modal_send').modal('hide');
-					if(response.success == true){
-                        $('div.alert').addClass('alert-success');
-                        $('div.alert').removeClass('alert-danger');
-                    }else{
-                        $('div.alert').addClass('alert-danger');
-                        $('div.alert').removeClass('alert-success');
-                    }
-
-                    $('div.alert').show();
-                    $('div.alert p').text(response.message);
-                    table.ajax.reload(null, false);
-                    $('div.alert').fadeOut(10000);
-				}
-			});
-		});
-
-
-
-
-
-
-
-		
-		//konfirmasi hapus
-		$(document).on('click', 'a#btn-hapus', function(e){
-			e.preventDefault();
-			$('#link_hapus').val($(this).attr('href'));
-			$('#modal_confirm').modal('show');
-		});
-
-		//hapus data
-		$('#form-hapus').submit(function(e){
-			e.preventDefault();
-			$.ajax({
-				url: "/karyawan/"+$('#link_hapus').val(),
-				type: 'POST',
-                dataType: 'json',
-                data: $(this).serializeArray(),
-                success: function(response){
-                	$('#link_hapus').val('');
-					$('#modal_confirm').modal('hide');
-					if(response.success == true){
-                        $('div.alert').addClass('alert-success');
-                        $('div.alert').removeClass('alert-danger');
-                    }else{
-                        $('div.alert').addClass('alert-danger');
-                        $('div.alert').removeClass('alert-success');
-                    }
-
-                    $('div.alert').show();
-                    $('div.alert p').text(response.message);
-                    table.ajax.reload(null, false);
-                    $('div.alert').fadeOut(10000);
-				}
-			});
-		});
-	
 	});
 </script>
 @endsection

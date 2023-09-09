@@ -8,6 +8,7 @@ use App\Models\Karyawan;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class KaryawanController extends Controller
 {
@@ -141,6 +142,33 @@ class KaryawanController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Karyawan $karyawan){
+        $cek = DB::table('reimbursements')
+                    ->where('diajukan_oleh', $karyawan->nip)
+                    ->exists();
+        if($cek){
+            return response()->json([
+                'success' => false,
+                'message' => 'Karyawan masih memiliki data Reimbursement',
+            ]);
+        }
+
+        $cek = DB::table('reimbursement_histories')
+                    ->where('karyawan_id', $karyawan->nip)
+                    ->exists();
+
+        if($cek){
+            return response()->json([
+                'success' => false,
+                'message' => 'Karyawan memiliki data Reimbursement',
+            ]);
+        }
+
+        if($karyawan->nip == '1234'){
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak dapat dihapus',
+            ]);
+        }
 
         $delete = Karyawan::destroy($karyawan->nip);
 

@@ -1,21 +1,13 @@
+<h6>
 @if($status == '')
-	<h6>
-		<span class="badge badge-secondary">Draft</span>
-	</h6>
+	<span class="badge badge-secondary">Draft</span>
 @elseif($status == 'Pengajuan')
-	<h6>
-		<span class="badge badge-warning">{{ $status }}</span>
-	</h6>
+	<span class="badge badge-warning">{{ $status }}</span>
 @elseif($status == 'Disetujui')
-	<h6>
-		<span class="badge badge-success">{{ $status }}</span>
-	</h6>
+	<span class="badge badge-success">{{ $status }}</span>
 @elseif($status == 'Ditolak')
-	<h6>
-		<span class="badge badge-danger">{{ $status }}</span>
-	</h6>
+	<span class="badge badge-danger">{{ $status }}</span>
 @else
-	<h6>
-		<span class="badge badge-primary">{{ $status }}</span>
-	</h6>
+	<span class="badge badge-primary">{{ $status }}</span>
 @endif
+</h6>

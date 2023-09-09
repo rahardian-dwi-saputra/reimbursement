@@ -28,6 +28,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->jabatan == 'DIREKTUR' ? Response::allow() : Response::deny('Hanya DIREKTUR yang dapat mengakses halaman ini');
         });
 
+        Gate::define('isFinance', function($user) {
+            return $user->jabatan == 'FINANCE' ? Response::allow() : Response::deny('Hanya FINANCE yang dapat mengakses halaman ini');
+        });
+
         Gate::define('access-reimbursement', function ($user, Reimbursement $reimbursement) {
             return $user->nip === $reimbursement->diajukan_oleh 
                     ? Response::allow()
